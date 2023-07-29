@@ -1,21 +1,27 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import japanize_matplotlib
+import pandas as pd
 
 
 def main():
-    # https://www.omron.com/jp/ja/ir/irlib/pdfs/factbook2023j.pdf
+    filename = 'datas.csv'
+    df = pd.read_csv(filename)
+    size_df = len(df['title'])
 
-    title = 'Omron 2023/3E 損益計算書 (単位：百万円)'
-    m_list = [998160 - 486892,  # 固定資産
-              486892,  # 流動資産
-              731227,  # 純資産
-              266933 - 210020,  # 固定負債
-              210020]  # 流動負債
+    for i in range(size_df):
+        title = df['title'][i]
+        m_list = [
+            df['固定資産'][i],
+            df['流動資産'][i],
+            df['純資産'][i],
+            df['固定負債'][i],
+            df['流動負債'][i]
+        ]
 
-    b2s = BS2Square()
-    b2s.plot(title, m_list)
-    b2s.save('bs_omron23.png')
+        b2s = BS2Square()
+        b2s.plot(title, m_list)
+        b2s.save(df['title'][i] + '.png')
 
 
 class BS2Square:
@@ -32,7 +38,7 @@ class BS2Square:
                 m_list[3] / (m_list[2] + m_list[3] + m_list[4]),
                 m_list[4] / (m_list[2] + m_list[3] + m_list[4])]
         _x = [0, 0, 0.5, 0.5, 0.5]
-        _y = [0, rate[0], 0, rate[2], rate[2]+rate[3]]
+        _y = [0, rate[0], 0, rate[2], rate[2] + rate[3]]
 
         list_of_rectangle = []
         for i in range(5):
